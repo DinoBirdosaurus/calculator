@@ -23,7 +23,7 @@
     margin-top: 50px;
 }
 #calculator,
-#history-panel {
+.history-panel {
     min-width: 400px;
     border: 1px solid black;
     border-radius: 20px;
@@ -55,12 +55,12 @@
     border: 1px solid black;
     border-radius: 10px;
     height: 100%;
-    padding: 1rem;
+    padding: 2rem;
     /*border-right: 0; */
     grid-gap: 10px;
 }
 
-#history-panel {
+.history-panel {
     display: flex;
     min-height: 458px;
 }
@@ -73,7 +73,12 @@
     font-size: 20px;
 }
 
-.btn {
+.operator,
+.number,
+.equal,
+.decimal,
+.allclear,
+.clear {
     border-radius: 50px;
     padding: 10px;
     font-size: 20px;
