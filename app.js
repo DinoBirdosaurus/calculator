@@ -1,72 +1,91 @@
-// 
-class Calculator {
+
+class Calculator { // class to make everything look neat and organized
     constructor(previousOperandDisplay, currentOperandDisplay, historyPanel) {
         this.previousOperandDisplay = previousOperandDisplay;
         this.currentOperandDisplay = currentOperandDisplay;
         this.historyPanel = historyPanel;
         this.clear();
-    }
+    };
 
     clear(){
         this.currentOperand = '';
         this.previousOperand = '';
         this.operation = undefined;
-    }
+    };
 
     delete() {
         this.currentOperand = this.currentOperand.toString().slice(0, -1)
-    }
+    };
 
     appendNumber(number) {
         if (number === '.' && this.currentOperand.includes('.')) return // a check to disable multiple decimals
         this.currentOperand = this.currentOperand.toString() + number.toString();
-    }
+    };
 
     chooseOperation(operation) {
         if (this.currentOperand === '')  // a check to prevent numbers from clearing
             return;
-        if (this.currentOperand !== '') { // a check that allows numbers to auto-compute after a new operand is clicked after a (num + operator + num) 
-            this.compute();
+        if (this.currentOperand !== '') { // a check that allows numbers to auto-operate after a new operand is clicked after a (num + operator + num) 
+            this.operate();
         }
         this.operation = operation;
         this.previousOperand = this.currentOperand // moves operand to smaller screen
         this.currentOperand = ''                 // and then clears bigger screen
-    }
+    };
 
-    compute() { // basic compute function
-        let computation
-        const previous = parseFloat(this.previousOperand)
-        const current = parseFloat(this.currentOperand)
-        if (isNaN(previous) || isNaN(current)) return
+    operate() { // basic operate function
+        let computation;
+        const x = parseFloat(this.previousOperand)
+        const y = parseFloat(this.currentOperand)
+        if (isNaN(x) || isNaN(y)) return
         switch (this.operation) {
             case '+':
-                computation = previous + current;
+                computation = x + y;
                 break
             case '-':
-                computation = previous - current;
+                computation = x - y;
                 break
-            case '*':
-                computation = previous * current;
+            case 'x':
+                computation = x * y;
                 break
             case '÷':
-                computation = previous / current;
+                computation = x / y;
                 break
             default:
                 return
         }
-        this.currentOperand = computation;
+        
+        this.currentOperand = Math.round(computation * 1000)/1000;
         this.operation = undefined;
         this.previousOperand = '';
-    }
+    };
 
+    betterNumDisplay(number) {
+        const stringNumber = number.toString()
+        const integerDigits = parseFloat(stringNumber.split('.')[0])
+        const decimalDigits = stringNumber.split('.')[1]
+        let integerDisplay
+        if (isNaN(integerDigits)) {
+            integerDisplay = ''
+        } else {
+            integerDisplay = integerDigits.toLocaleString('en', { // allows big integers to format with commas
+                maximumFractionDigits: 0})
+        }
+        if (decimalDigits != null) {
+            return `${integerDisplay}.${decimalDigits}`
+        } else {
+            return integerDisplay
+        }
+    };
     updateDisplay() {
-        this.currentOperandDisplay.innerText = this.currentOperand;
+        this.currentOperandDisplay.innerText = 
+            this.betterNumDisplay(this.currentOperand)
         if (this.operation != null) {
             this.previousOperandDisplay.innerText =
-            `${this.previousOperand} ${this.operation}` 
-        }
+            `${this.betterNumDisplay(this.previousOperand)} ${this.operation}` 
+        } else {previousOperandDisplay.innerText = ''}
     }
-}
+};
 
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
@@ -99,7 +118,7 @@ operatorButtons.forEach(button => {
 const calculator = new Calculator(previousOperandDisplay, currentOperandDisplay) 
 
 equalsButton.addEventListener('click', () => {
-    calculator.compute();
+    calculator.operate();
     calculator.updateDisplay();
 });
 
