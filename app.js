@@ -104,3 +104,8 @@ allclearButton.addEventListener('click', () => {
     calculator.clear();
     calculator.updateDisplay();
 })
+
+backspaceButton.addEventListener('click', () => {
+    calculator.delete();
+    calculator.updateDisplay();
+})
