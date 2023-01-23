@@ -14,7 +14,7 @@ class Calculator {
     }
 
     delete() {
-
+        this.currentOperand = this.currentOperand.toString().toSlice(0, -1)
     }
 
     appendNumber(number) {
@@ -33,7 +33,7 @@ class Calculator {
         this.currentOperand = ''                 // and then clears bigger screen
     }
 
-    compute() {
+    compute() { // basic compute function
         let computation
         const previous = parseFloat(this.previousOperand)
         const current = parseFloat(this.currentOperand)
