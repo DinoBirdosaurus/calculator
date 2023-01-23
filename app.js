@@ -48,6 +48,9 @@ class Calculator { // class to make everything look neat and organized
             case 'x':
                 computation = x * y;
                 break
+            case '*':
+                computation = x * y;
+                break
             case '÷':
             
             if (y === 0) {
@@ -56,7 +59,15 @@ class Calculator { // class to make everything look neat and organized
                 return
             }
                 computation = x / y;
-                
+                break
+            case '/':
+            
+            if (y === 0) {
+                alert ("Error: Division by 0")
+                calculator.clear()
+                return
+            }
+                computation = x / y;
                 break
             default:
                 return
@@ -115,6 +126,7 @@ equalsButton.addEventListener('click', keyboardInput)
 allclearButton.addEventListener('click', keyboardInput)
 backspaceButton.addEventListener('click', keyboardInput)
 
+
 // sets number buttons up for calculation
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -153,11 +165,12 @@ function keyboardInput(e) {
         calculator.updateDisplay()
     }
     if (e.key === '.') {
-        calculator.appendNumber(e.key.innerText)
+        calculator.appendNumber(e.key)
         calculator.updateDisplay()
     }
     if (e.key === '=' || e.key === 'Enter' || e.key === ' ') {
         calculator.operate()
+        calculator.updateDisplay()
     }
     if (e.key === 'Backspace') {
         calculator.delete()
@@ -168,7 +181,7 @@ function keyboardInput(e) {
         calculator.updateDisplay()
     }
     if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
-      calculator.chooseOperation(e.key.innerText)
+      calculator.chooseOperation(e.key)
       calculator.updateDisplay()
     }
   }
