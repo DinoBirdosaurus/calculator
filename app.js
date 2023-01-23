@@ -1,112 +1,106 @@
-let currentNum = ""
-let inputNum = ""
-let operator = ""
+// 
+class Calculator {
+    constructor(previousOperandDisplay, currentOperandDisplay, historyPanel) {
+        this.previousOperandDisplay = previousOperandDisplay;
+        this.currentOperandDisplay = currentOperandDisplay;
+        this.historyPanel = historyPanel;
+        this.clear();
+    }
 
-const numberButtons = document.querySelectorAll('.number')
-const operatorButtons = document.querySelectorAll('.operator')
-const equalsButton = document.querySelector('.equal');
-const decimalButton = document.querySelector('.decimal');
+    clear(){
+        this.currentOperand = '';
+        this.previousOperand = '';
+        this.operation = undefined;
+    }
+
+    delete() {
+
+    }
+
+    appendNumber(number) {
+        if (number === '.' && this.currentOperand.includes('.')) return // a check to disable multiple decimals
+        this.currentOperand = this.currentOperand.toString() + number.toString();
+    }
+
+    chooseOperation(operation) {
+        if (this.currentOperand === '')  // a check to prevent numbers from clearing
+            return;
+        if (this.currentOperand !== '') { // a check that allows numbers to auto-compute after a new operand is clicked after a (num + operator + num) 
+            this.compute();
+        }
+        this.operation = operation;
+        this.previousOperand = this.currentOperand // moves operand to smaller screen
+        this.currentOperand = ''                 // and then clears bigger screen
+    }
+
+    compute() {
+        let computation
+        const previous = parseFloat(this.previousOperand)
+        const current = parseFloat(this.currentOperand)
+        if (isNaN(previous) || isNaN(current)) return
+        switch (this.operation) {
+            case '+':
+                computation = previous + current;
+                break
+            case '-':
+                computation = previous - current;
+                break
+            case '*':
+                computation = previous * current;
+                break
+            case '÷':
+                computation = previous / current;
+                break
+            default:
+                return
+        }
+        this.currentOperand = computation;
+        this.operation = undefined;
+        this.previousOperand = '';
+    }
+
+    updateDisplay() {
+        this.currentOperandDisplay.innerText = this.currentOperand;
+        this.previousOperandDisplay.innerText = this.previousOperand;
+    }
+}
+
+const numberButtons = document.querySelectorAll('.number');
+const operatorButtons = document.querySelectorAll('.operator');
+
+const equalsButton = document.querySelector('#equals');
 const allclearButton = document.querySelector('.allclear');
 const backspaceButton = document.querySelector('.clear');
 
-// screens
-const inputScreen = document.getElementById('inputScreen')
-const currentScreen = document.getElementById('currentScreen')
-const historyPanel = document.getElementById('historyPanel')
 
-equalsButton.addEventListener("click", () => {
-    if (currentNum != "" && inputNum != "") {
-        calculate();
-    }
+// where we will display numbers and operand on screens
+const previousOperandDisplay = document.querySelector('[data-previous-operand]');
+const currentOperandDisplay = document.querySelector('[data-current-operand]');
+const historyPanel = document.getElementById('historyPanel');
+
+// sets number buttons up for calculation
+numberButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        calculator.appendNumber(button.innerText) // calls function appendNumber
+        calculator.updateDisplay() // calls function updateDisplay
+    })
 });
-
-numberButtons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        handleNumber(e.target.textContent);
+// sets operators up for calculation
+operatorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        calculator.chooseOperation(button.innerText) // calls function chooseOperation
+        calculator.updateDisplay()
     })
 });
 
-const handleNumber = (number) => {
-    if (currentNum.length <= 11) {
-        currentNum += number;
-        currentScreen.textContent = currentNum;
-    }
-};
+const calculator = new Calculator(previousOperandDisplay, currentOperandDisplay) 
 
-operatorButtons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-        handleOperator(e.target.textContent);
-    })
+equalsButton.addEventListener('click', () => {
+    calculator.compute();
+    calculator.updateDisplay();
+});
+
+allclearButton.addEventListener('click', () => {
+    calculator.clear();
+    calculator.updateDisplay();
 })
-
-const handleOperator = (op) => {
-    operator = op;
-    inputNum = currentNum;
-    inputScreen.textContent = inputNum + " " + operator;
-    currentNum = "";
-    currentScreen.textContent = "";
-}
-
-const calculate = () => {
-    inputNum = Number(inputNum);
-    currentNum = Number(currentNum);
-
-    if (operator === "+") {
-        inputNum += currentNum;
-    } else if (operator === "-") {
-        inputNum -= currentNum;
-    } else if (operator === "*") {
-        inputNum *= currentNum;
-    } else if (operator === "/") {
-        if (currentNum <= 0) {
-            inputNum = "Error ÷ 0";
-            displayResult();
-            return;
-        }
-    }
-};
-
-const displayResult = () => {
-    inputScreen.textContent = "";
-    operator = "";
-    if (inputNum.length <= 11) {
-        currentScreen.textContent = inputNum;
-    } else {
-        currentScreen.textContent = inputNum.slice(0, 11) + "...";
-    }
-};
-
-const add = (x, y) => {
-    return x + y;
-};
-  
-const subtract = (x, y) => {
-    return x - y;
-};
-
-const multiply = (x, y) => {
-    return x * y;
-}
-
-const divide = (x, y) => {
-    return x / y;
-};
-
-
-const operate = (operator, x, y) => {
-    x = Number(x)
-    y = Number(y)
-    switch (operator) {
-        case '+':
-            return add(x, y)
-        case '-':
-            return subtract(x, y) 
-        case 'x':
-            return multiply(x, y) 
-        case '÷':
-            if (b === 0) return null
-            else return divide(x ,y)
-        default:
-            return null
-    }
-  };

@@ -39,17 +39,19 @@
     padding: 10px 20px;
 }
 
-.input-screen {
+.previousOperandDisplay {
     min-height: 30px;
     font-size: 12px;
 }
 
-.current-screen {
+.currentOperandDisplay {
     min-height: 65px;
     font-size: 20px;
 }
 
-#button-panel {
+#button-panel,
+#allclear,
+#clear {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     border: 1px solid black;
