@@ -49,7 +49,14 @@ class Calculator { // class to make everything look neat and organized
                 computation = x * y;
                 break
             case '÷':
+            
+            if (y === 0) {
+                alert ("Error: Division by 0")
+                calculator.clear()
+                return
+            }
                 computation = x / y;
+                
                 break
             default:
                 return
