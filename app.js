@@ -92,6 +92,9 @@ class Calculator { // class to make everything look neat and organized
             `${this.betterNumDisplay(this.previousOperand)} ${this.operation}` 
         } else {previousOperandDisplay.innerText = ''}
     }
+    updateHistory() {
+
+    }
 };
 
 const numberButtons = document.querySelectorAll('.number');
@@ -106,6 +109,11 @@ const backspaceButton = document.querySelector('.clear');
 const previousOperandDisplay = document.querySelector('[data-previous-operand]');
 const currentOperandDisplay = document.querySelector('[data-current-operand]');
 const historyPanel = document.getElementById('historyPanel');
+
+window.addEventListener('keydown', keyboardInput)
+equalsButton.addEventListener('click', keyboardInput)
+allclearButton.addEventListener('click', keyboardInput)
+backspaceButton.addEventListener('click', keyboardInput)
 
 // sets number buttons up for calculation
 numberButtons.forEach(button => {
@@ -138,3 +146,29 @@ backspaceButton.addEventListener('click', () => {
     calculator.delete();
     calculator.updateDisplay();
 })
+
+function keyboardInput(e) {
+    if (e.key >= 0 && e.key <= 9) {
+        calculator.appendNumber(e.key)
+        calculator.updateDisplay()
+    }
+    if (e.key === '.') {
+        calculator.appendNumber(e.key.innerText)
+        calculator.updateDisplay()
+    }
+    if (e.key === '=' || e.key === 'Enter' || e.key === ' ') {
+        calculator.operate()
+    }
+    if (e.key === 'Backspace') {
+        calculator.delete()
+        calculator.updateDisplay()
+    }
+    if (e.key === 'Escape') {
+        calculator.clear()
+        calculator.updateDisplay()
+    }
+    if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+      calculator.chooseOperation(e.key.innerText)
+      calculator.updateDisplay()
+    }
+  }
